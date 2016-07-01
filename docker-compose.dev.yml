@@ -1,0 +1,49 @@
+version: '2'
+services:
+  frontend:
+    image: gigary/nginx:1.8
+    networks:
+      - vd-prod
+    restart: always
+    volumes:
+      - ./src:/var/www
+      - ./data/nginx.conf:/etc/nginx/nginx.conf
+    links:
+      - backend
+    ports:
+      - 8000:80
+  backend:
+    image: gigary/php:5.6-dev
+    networks:
+      - vd-prod
+    restart: always
+    volumes:
+      - ./src:/var/www
+    expose:
+      - 9000
+    links:
+      - database
+    depends_on:
+      - database-restore
+  database-restore:
+    image: gigary/mariadb-client:10.1
+    networks:
+      - vd-prod
+    volumes:
+      - ./data/db.sql:/tmp/db.sql
+      - ./data/mysql-import.sh:/tmp/script.sh
+    links:
+      - database
+    depends_on:
+      - database
+    command: /tmp/script.sh
+  database:
+    image: gigary/mariadb:10.1
+    restart: always
+    networks:
+      - vd-prod
+    ports:
+      - 3306:3306
+networks:
+  vd-prod:
+    driver: bridge
