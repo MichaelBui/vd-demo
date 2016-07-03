@@ -57,7 +57,7 @@
 					"listen": "test",
 					"script": {
 						"type": "text/javascript",
-						"exec": "tests[\"Status code is 200\"] = responseCode.code === 200;\n\nvar jsonData = JSON.parse(responseBody);\ntests[\"Response data is given\"] = typeof jsonData.data !== 'undefined';\ntests[\"Response data is array\"] = jsonData.data instanceof Array;\ntests[\"Response data contains objects\"] = jsonData.data.length > 0;\n"
+						"exec": "tests[\"Status code is 200\"] = responseCode.code === 200;\n\nvar jsonData = JSON.parse(responseBody);\ntests[\"Response data is array\"] = jsonData instanceof Array;\ntests[\"Response data contains objects\"] = jsonData.length > 0;\n"
 					}
 				}
 			],

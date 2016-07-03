@@ -12,10 +12,10 @@ class ObjectsController extends Controller
 {
     public function index(ObjectsModel $objectsModel)
     {
-        return ['data' => $objectsModel->getAll()];
+        return $objectsModel->getAll();
     }
 
-    public function save(ObjectsModel $objectsModel, Request $request, Application $application)
+    public function save(ObjectsModel $objectsModel, Request $request, Application $application, Carbon $now)
     {
         if (!$request->isJson()) {
             $application->abort('415');
@@ -23,12 +23,22 @@ class ObjectsController extends Controller
         $requestData = $request->json()->all();
         $value = reset($requestData);
         $key = key($requestData);
+        $existObject = $objectsModel->getByKey($key);
+        if (!empty($existObject) && $existObject[ObjectsModel::COLUMN_VALUE] === $value) {
+            return ['status' => false];
+        }
+
         $object = [
             ObjectsModel::COLUMN_KEY => $key,
             ObjectsModel::COLUMN_VALUE => $value,
         ];
-        $result = $objectsModel->save($object);
-        return ['data' => $result];
+        if (empty($existObject)) {
+            $object[ObjectsModel::COLUMN_UPDATED_AT] = $now;
+            $result = $objectsModel->insert($object);
+        } else {
+            $result = $objectsModel->updateByKey($key, $object);
+        }
+        return ['status' => $result];
     }
 
     public function show($key, ObjectsLogsModel $objectsLogsModel, Application $application, Request $request)
