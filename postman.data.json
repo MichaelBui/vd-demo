@@ -1,0 +1,28 @@
+[
+  {
+    "key": "test_key",
+    "value": "test_value2",
+    "http_code": 200
+  },
+  {
+    "key": "test_key",
+    "timestamp": 1467533000,
+    "value": "test_value1",
+    "http_code": 200
+  },
+  {
+    "key": "test_key",
+    "timestamp": 1467534000,
+    "value": "test_value2",
+    "http_code": 200
+  },
+  {
+    "key": "test_key",
+    "timestamp": 1,
+    "http_code": 404
+  },
+  {
+    "key": "non_exist_key",
+    "http_code": 404
+  }
+]

@@ -1,0 +1,112 @@
+{
+	"variables": [],
+	"info": {
+		"name": "VD-Demo",
+		"_postman_id": "86dc34b8-1c2a-a48d-4a55-5bcb07adb397",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "/",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": "tests[\"Status code is 200\"] = responseCode.code === 200;\ntests[\"Response is correct\"] = responseBody === \"Lumen (5.2.7) (Laravel Components 5.2.*)\";"
+					}
+				}
+			],
+			"request": {
+				"url": "http://{{host}}/?XDEBUG_SESSION_START=PHPSTORM",
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/object",
+			"request": {
+				"url": "http://{{host}}/object?XDEBUG_SESSION_START=PHPSTORM",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"new_key\": \"new_value\"}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/object",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": "tests[\"Status code is 200\"] = responseCode.code === 200;\n\nvar jsonData = JSON.parse(responseBody);\ntests[\"Response data is given\"] = typeof jsonData.data !== 'undefined';\ntests[\"Response data is array\"] = jsonData.data instanceof Array;\ntests[\"Response data contains objects\"] = jsonData.data.length > 0;\n"
+					}
+				}
+			],
+			"request": {
+				"url": "http://{{host}}/object?XDEBUG_SESSION_START=PHPSTORM",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"mykey\": \"value\"}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/object/{key}",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": "tests[\"Status code is correct\"] = responseCode.code === data.http_code;\n\nif (responseCode.code === 200) {\n    tests[\"Response data is correct\"] = responseBody === data.value;\n}"
+					}
+				}
+			],
+			"request": {
+				"url": "http://{{host}}/object/{{key}}?XDEBUG_SESSION_START=PHPSTORM&timestamp={{timestamp}}",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"mykey\": \"value\"}"
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

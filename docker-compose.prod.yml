@@ -1,0 +1,39 @@
+version: '2'
+services:
+  frontend:
+    build:
+      context: ./
+      dockerfile: Dockerfile.nginx
+    image: michaelbui/vd-nginx
+    networks:
+      - private
+    restart: always
+    links:
+      - backend
+    ports:
+      - 30100:80
+  backend:
+    build:
+      context: ./
+      dockerfile: Dockerfile.php
+    image: michaelbui/vd-php
+    networks:
+      - private
+    restart: always
+    expose:
+      - 9000
+    links:
+      - database
+  database:
+    build:
+      context: ./
+      dockerfile: Dockerfile.mysql
+    image: michaelbui/vd-mysql
+    restart: always
+    networks:
+      - private
+    expose:
+      - 3306
+networks:
+  private:
+    driver: bridge

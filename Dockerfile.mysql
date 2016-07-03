@@ -1,0 +1,9 @@
+FROM gigary/mariadb:10.1
+MAINTAINER Michael Bui <mf.michaelbui@gmail.com>
+
+ADD ./data/prod.sql /tmp/db.sql
+ADD ./data/mysql-import.sh /tmp/script.sh
+
+RUN sh -c "mysqld --skip-grant-tables &" && \
+    /tmp/script.sh localhost && \
+    pkill mysqld

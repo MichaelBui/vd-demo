@@ -1,37 +1,22 @@
 version: '2'
 services:
-  frontend:
-    image: gigary/nginx:1.8
+  phpunit:
+    image: gigary/phpunit:5.4.6
     networks:
       - private
-    restart: always
     volumes:
       - ./server:/var/www
-      - ./data/nginx.conf:/etc/nginx/nginx.conf
-    links:
-      - backend
-    ports:
-      - 30101:80
-  backend:
-    image: gigary/php:5.6-dev
-    networks:
-      - private
-    restart: always
-    volumes:
-      - ./server:/var/www
-      - ./data/xdebug.ini:/etc/php5/conf.d/xdebug.ini
-    expose:
-      - 9000
     links:
       - database
     depends_on:
       - database-restore
+    command: phpunit -c /var/www/phpunit.xml
   database-restore:
     image: gigary/mariadb-client:10.1
     networks:
       - private
     volumes:
-      - ./data/prod.sql:/tmp/db.sql
+      - ./data/test.sql:/tmp/db.sql
       - ./data/mysql-import.sh:/tmp/script.sh
     links:
       - database
@@ -40,11 +25,10 @@ services:
     command: /tmp/script.sh database
   database:
     image: gigary/mariadb:10.1
-    restart: always
     networks:
       - private
-    ports:
-      - 30102:3306
+    expose:
+      - 3306
 networks:
   private:
     driver: bridge
