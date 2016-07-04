@@ -1,21 +1,31 @@
 version: '2'
 services:
-  frontend:
+  client-nginx:
     build:
       context: ./
-      dockerfile: Dockerfile.nginx
+      dockerfile: Dockerfile.client
+    image: michaelbui/vd-client
+    networks:
+      - private
+    restart: always
+    ports:
+      - 30103:80
+  server-nginx:
+    build:
+      context: ./
+      dockerfile: Dockerfile.server.nginx
     image: michaelbui/vd-nginx
     networks:
       - private
     restart: always
     links:
-      - backend
+      - server-php:backend
     ports:
       - 30100:80
-  backend:
+  server-php:
     build:
       context: ./
-      dockerfile: Dockerfile.php
+      dockerfile: Dockerfile.server.php
     image: michaelbui/vd-php
     networks:
       - private
@@ -23,11 +33,11 @@ services:
     expose:
       - 9000
     links:
-      - database
-  database:
+      - server-mysql:database
+  server-mysql:
     build:
       context: ./
-      dockerfile: Dockerfile.mysql
+      dockerfile: Dockerfile.server.mysql
     image: michaelbui/vd-mysql
     restart: always
     networks:

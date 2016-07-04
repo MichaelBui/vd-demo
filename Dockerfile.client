@@ -1,0 +1,5 @@
+FROM gigary/nginx:1.8
+MAINTAINER Michael Bui <mf.michaelbui@gmail.com>
+
+ADD ./client/dist /var/www
+ADD ./data/nginx.client.conf /etc/nginx/nginx.conf

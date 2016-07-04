@@ -1,37 +1,88 @@
-import { WebDevTecService, ITecThing } from '../components/webDevTec/webDevTec.service';
+interface IObject {
+  key: string;
+  value: string;
+  timestamp?: number;
+  datetime?: string;
+  logs: IObjectLog[];
+}
+
+interface IObjectLog {
+  timestamp: number;
+  value: string;
+}
+
+interface IResult {
+  data: any;
+  status: number;
+}
 
 export class MainController {
-  public awesomeThings: ITecThing[];
-  public webDevTec: WebDevTecService;
-  public classAnimation: string;
-  public creationDate: number;
-  public toastr: any;
+  public objects: {[key: string]: IObject};
+  public object: IObject;
+
+  public result: IResult;
 
   /* @ngInject */
-  constructor ($timeout: angular.ITimeoutService, webDevTec: WebDevTecService, toastr: any) {
-    this.awesomeThings = new Array();
-    this.webDevTec = webDevTec;
-    this.classAnimation = '';
-    this.creationDate = 1467467716438;
-    this.toastr = toastr;
-    this.activate($timeout);
+  constructor(Restangular: restangular.IService, $rootScope: angular.IRootScopeService) {
+    this.restClient = Restangular;
+    this.rootScope = $rootScope;
+    this.rootScope.$on(this.eventNewObjectSaved, this.getObjects);
+    this.getObjects();
   }
 
-  /** @ngInject */
-  activate($timeout: angular.ITimeoutService) {
-    this.getWebDevTec();
+  public getObjects = () => {
+    var that = this;
+    this.restClient.all('/object').getList().then((response: any) => {
+      that.objects = <{[key: string]: IObject}>response;
+    });
+  };
 
-    $timeout(() => {
-      this.classAnimation = 'rubberBand';
-    }, 4000);
-  }
+  public getObject = (key: string, timestamp: string) => {
+    var that = this;
+    var queryParams: any = {};
 
-  showToastr() {
-    this.toastr.info('Fork <a href="https://github.com/Swiip/generator-gulp-angular" target="_blank"><b>generator-gulp-angular</b></a>');
-    this.classAnimation = '';
-  }
+    if (!key) {
+      return;
+    }
+    this.result = {
+      data: '... loading value ...',
+      status: 1
+    };
 
-  getWebDevTec() {
-    this.awesomeThings = this.webDevTec.tec;
-  }
+    if (parseInt(timestamp, 10) > 0) {
+      queryParams.timestamp = timestamp;
+    }
+    this.restClient.one('/object', key).get(queryParams).then((response: string) => {
+      that.result = {
+        data: response,
+        status: 1
+      };
+    }, () => {
+      that.result = {
+        data: 'ERROR: Not Found!',
+        status: 0
+      };
+    });
+  };
+
+  public saveObject = (object: IObject) => {
+    var data = {};
+    var that = this;
+    if (typeof object === 'undefined' || !object.key || !object.value) {
+      return;
+    }
+    data[object.key] = object.value;
+    this.restClient.all('/object').post(data).then((response: any) => {
+      if (response.status) {
+        var now = moment().utc();
+        object.datetime = now.format();
+        object.timestamp = now.unix();
+        that.rootScope.$broadcast(that.eventNewObjectSaved, object);
+      }
+    });
+  };
+
+  private restClient: restangular.IService;
+  private rootScope: angular.IRootScopeService;
+  private eventNewObjectSaved = 'newObjectSaved';
 }

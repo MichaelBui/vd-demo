@@ -1,10 +1,18 @@
 # VD-Demo
 
 * Author: [Michael Bui](http://about.me/michaelbui) (mf.michaelbui@gmail.com)
-* Stack:
-    * LEMP (Linux / Nginx / MySQL / PHP)
-    * Framework: [Lumen](https://lumen.laravel.com)
-    * [Docker](https://www.docker.com/)
+* Technical overview:
+    * Environment
+        * CoreOS
+        * [Docker](https://www.docker.com/)
+    * Backend
+        * Stack: LEMP (Linux / Nginx / MySQL / PHP)
+        * Framework: [Lumen](https://lumen.laravel.com)
+    * Frontend:
+        * Framework: AngularJS
+        * UX/UI: Angular Material
+        * Client: Restangular (to consume backend APIs)
+        * Builders: npm, gulp, bower,...
 
 ## Requirements
 For your convenience, only Docker is required.
@@ -22,6 +30,9 @@ All project-related libraries is installed inside docker images/containers
 * Run `./run_dev.sh up -d`
 * Test all APIs at endpoint: `http://localhost:30101/`
 * To destroy all dev containers, run `./run_dev.sh down`
+* Client UI for your convenient: `http://localhost:30104/`
+
+    **NOTE:** Do update the API URL in the Client UI if necessary
 
 ### Test
 * Run `./run_test.sh`
@@ -32,5 +43,8 @@ All project-related libraries is installed inside docker images/containers
 * Run `./run_prod.sh up -d`
 * Test all APIs at endpoint: `http://localhost:30100/`
 * To destroy all dev containers, run `./run_prod.sh down`
+* Client UI for your convenient: `http://localhost:30103/`
+
+    **NOTE:** Do update the API URL in the Client UI if necessary
 
 # Thank you!

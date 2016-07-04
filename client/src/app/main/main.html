@@ -1,34 +1,78 @@
-<div layout="vertical" layout-fill>
-
-  <md-content>
-    <header>
-      <acme-navbar creation-date="main.creationDate"></acme-navbar>
-    </header>
-
-    <section class="jumbotron">
-      <h1>'Allo, 'Allo!</h1>
-      <p class="lead">
-        <img src="assets/images/yeoman.png" alt="I'm Yeoman"><br>
-        Always a pleasure scaffolding your apps.
-      </p>
-      <md-button class="md-raised animated infinite" ng-class="main.classAnimation" ng-click="main.showToastr()">Splendid Toastr</md-button>
-      <p>
-        With ♥ thanks to the contributions of<acme-malarkey extra-values="['Yeoman', 'Gulp', 'Angular']"></acme-malarkey>
-      </p>
+<div layout="column" layout-gt-xs="row" layout-wrap="">
+    <section flex="" flex-gt-xs="50" id="saveObject">
+        <header class="md-headline">Save Object</header>
+        <form name="saveObject" layout="column">
+            <md-input-container flex="">
+                <label>Key</label>
+                <input ng-model="main.object.key" name="objectKey" required=""/>
+                <div ng-messages="saveObject.objectKey.$error" multiple md-auto-hide="false">
+                    <div ng-message="required">
+                        Key can not be empty
+                    </div>
+                </div>
+            </md-input-container>
+            <md-input-container flex="">
+                <label>Value</label>
+                <input ng-model="main.object.value" name="objectValue" required=""/>
+                <div ng-messages="saveObject.objectValue.$error" multiple md-auto-hide="false">
+                    <div ng-message="required">
+                        Value can not be empty
+                    </div>
+                </div>
+            </md-input-container>
+            <md-button type="submit" flex="" class="md-raised" ng-click="main.saveObject(main.object)">Save</md-button>
+        </form>
     </section>
-
-    <div class="techs" layout-align="center">
-      <md-card ng-repeat="awesomeThing in main.awesomeThings | orderBy:'rank'">
-        <md-card-content>
-          <img class="pull-right" ng-src="assets/images/{{ awesomeThing.logo }}" alt="{{ awesomeThing.title }}">
-          <h3 class="md-title">{{ awesomeThing.title }}</h3>
-          <p>{{ awesomeThing.description }}</p>
-        </md-card-content>
-        <div class="md-action-buttons">
-          <md-button ng-href="{{ awesomeThing.url }}">Website</md-button>
-        </div>
-      </md-card>
-    </div>
-  </md-content>
-
+    <section flex="" flex-gt-xs="50" id="getObjectValue">
+        <header class="md-headline">Get Object</header>
+        <form layout="column" name="getObjectValue">
+            <md-input-container flex="">
+                <label>Key</label>
+                <input ng-model="objectKey" name="objectKey" required/>
+                <div ng-messages="getObjectValue.objectKey.$error" multiple md-auto-hide="false">
+                    <div ng-message="required">
+                        Key can not be empty
+                    </div>
+                </div>
+            </md-input-container>
+            <md-input-container flex="">
+                <label>Timestamp</label>
+                <input ng-model="objectTimestamp"/>
+            </md-input-container>
+            <md-input-container flex="" ng-class="{'md-block': true, 'md-input-invalid': main.result.status == 0}">
+                <label>Result</label>
+                <textarea ng-model="main.result.data" rows="5" readonly md-select-on-focus></textarea>
+            </md-input-container>
+            <md-button type="submit" flex="" class="md-raised" ng-click="main.getObject(objectKey, objectTimestamp)">Get</md-button>
+        </form>
+    </section>
+    <section flex="" flex-gt-xs="100" id="listObjects">
+        <header class="md-headline">Object List</header>
+        <main>
+            <md-list ng-hide="main.objects">
+                <p>No objects yet!</p>
+            </md-list>
+            <md-list ng-show="main.objects" layout="column">
+                <md-list-item ng-repeat="object in main.objects" flex="" layout="column" layout-gt-xs="row" layout-align="center top">
+                    <div flex="">
+                        <md-icon class="material-icons">vpn_key</md-icon>
+                        <span class="key">{{object.key}}</span>
+                        <span class="timestamp">{{object.timestamp}}</span>
+                        <span class="datetime">{{object.datetime}}</span>
+                        <div class="value">{{object.value}}</div>
+                    </div>
+                    <md-list ng-hide="object.logs" flex="">
+                        <p>There are no changes for this key</p>
+                    </md-list>
+                    <md-list ng-show="object.logs.length" layout="column" flex="" layout="column">
+                        <md-subheader>Object's Log(s)</md-subheader>
+                        <md-list-item ng-repeat="log in object.logs | orderBy : 'timestamp' : true" flex="">
+                            <span class="timestamp">{{log.timestamp}}</span>
+                            <span class="value">{{log.value}}</span>
+                        </md-list-item>
+                    </md-list>
+                </md-list-item>
+            </md-list>
+        </main>
+    </section>
 </div>

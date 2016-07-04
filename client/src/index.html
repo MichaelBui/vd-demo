@@ -1,6 +1,6 @@
 <!doctype html>
 <html ng-app="frontend" ng-strict-di>
-  <head>
+<head>
     <meta charset="utf-8">
     <title>frontend</title>
     <meta name="description" content="">
@@ -18,29 +18,56 @@
     <!-- css files will be automatically insert here -->
     <!-- endinject -->
     <!-- endbuild -->
-  </head>
-  <body>
-    <!--[if lt IE 10]>
-      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-    <![endif]-->
+</head>
+<body>
+<!--[if lt IE 10]>
+<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+<![endif]-->
 
-    <div ui-view></div>
+<md-toolbar class="md-primary">
+    <div class="md-toolbar-tools">
+        <h2><span>VD-Demo</span></h2>
+        <span flex></span>
+        <section ng-show="showBaseUrlForm">
+            <md-button ng-click="showBaseUrlForm = !showBaseUrlForm" class="md-icon-button md-warn" aria-label="Show Base URL">
+                <md-icon class="material-icons">warning</md-icon>
+            </md-button>
+        </section>
+        <md-button href="https://github.com/MichaelBui/vd-demo" target="_blank" class="md-icon-button" aria-label="Source Code">
+            <md-icon class="material-icons">cloud_download</md-icon>
+        </md-button>
+        <md-button href="http://about.me/michaelbui" target="_blank" class="md-icon-button" aria-label="Author">
+            <md-icon class="material-icons">person</md-icon>
+        </md-button>
+    </div>
+    <div class="md-toolbar-tools" id="apiForm" ng-hide="showBaseUrlForm">
+        <form layout="row">
+            <label>API</label>
+            <input ng-model="baseUrl" type="text" flex="">
+            <md-button type="submit" ng-click="updateBaseUrl(baseUrl)" class="md-icon-button" aria-label="Save Base URL">
+                <md-icon class="material-icons">save</md-icon>
+            </md-button>
+        </form>
+    </div>
+</md-toolbar>
 
-    <!-- build:js(src) scripts/vendor.js -->
-    <!-- bower:js -->
-    <!-- run `gulp inject` to automatically populate bower script dependencies -->
-    <!-- endbower -->
-    <!-- endbuild -->
+<div ui-view></div>
 
-    <!-- build:js({.tmp/serve,.tmp/partials,src}) scripts/app.js -->
-    <!-- inject:js -->
-    <!-- js files will be automatically insert here -->
-    <!-- endinject -->
+<!-- build:js(src) scripts/vendor.js -->
+<!-- bower:js -->
+<!-- run `gulp inject` to automatically populate bower script dependencies -->
+<!-- endbower -->
+<!-- endbuild -->
 
-    <!-- inject:partials -->
-    <!-- angular templates will be automatically converted in js and inserted here -->
-    <!-- endinject -->
-    <!-- endbuild -->
+<!-- build:js({.tmp/serve,.tmp/partials,src}) scripts/app.js -->
+<!-- inject:js -->
+<!-- js files will be automatically insert here -->
+<!-- endinject -->
 
-  </body>
+<!-- inject:partials -->
+<!-- angular templates will be automatically converted in js and inserted here -->
+<!-- endinject -->
+<!-- endbuild -->
+
+</body>
 </html>

@@ -1,18 +1,28 @@
 version: '2'
 services:
-  frontend:
+  client-nginx:
+    image: gigary/nginx:1.8
+    networks:
+      - private
+    restart: always
+    volumes:
+      - ./client/dist:/var/www
+      - ./data/nginx.client.conf:/etc/nginx/nginx.conf
+    ports:
+      - 30104:80
+  server-nginx:
     image: gigary/nginx:1.8
     networks:
       - private
     restart: always
     volumes:
       - ./server:/var/www
-      - ./data/nginx.conf:/etc/nginx/nginx.conf
+      - ./data/nginx.server.conf:/etc/nginx/nginx.conf
     links:
-      - backend
+      - server-php:backend
     ports:
       - 30101:80
-  backend:
+  server-php:
     image: gigary/php:5.6-dev
     networks:
       - private
@@ -23,10 +33,10 @@ services:
     expose:
       - 9000
     links:
-      - database
+      - server-mysql:database
     depends_on:
-      - database-restore
-  database-restore:
+      - server-mysql-restore
+  server-mysql-restore:
     image: gigary/mariadb-client:10.1
     networks:
       - private
@@ -34,11 +44,11 @@ services:
       - ./data/prod.sql:/tmp/db.sql
       - ./data/mysql-import.sh:/tmp/script.sh
     links:
-      - database
+      - server-mysql:database
     depends_on:
-      - database
+      - server-mysql
     command: /tmp/script.sh database
-  database:
+  server-mysql:
     image: gigary/mariadb:10.1
     restart: always
     networks:

@@ -32,6 +32,15 @@
 		},
 		{
 			"name": "/object",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": "tests[\"Status code is 200\"] = responseCode.code === 200;"
+					}
+				}
+			],
 			"request": {
 				"url": "http://{{host}}/object?XDEBUG_SESSION_START=PHPSTORM",
 				"method": "POST",
@@ -44,7 +53,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"new_key\": \"new_value\"}"
+					"raw": "{\"test_key\": \"test_value\"}"
 				},
 				"description": ""
 			},
